@@ -58,8 +58,8 @@ src/
     Character.jsx             loads a file the first time it is selected, plays it (drei useAnimations + cross-fade)
     Viewer.jsx                canvas, lights, floor, glowing ring, orbit camera
     ModelPicker.jsx           top-left buttons to switch models
-    AnimationPicker.jsx       glass side panel with search and category tabs
-    NowPlaying.jsx            bottom bar: progress, play/pause, replay, speed, loading status
+    AnimationPicker.jsx       animation list with search and tabs (side panel; bottom sheet on phones)
+    NowPlaying.jsx            player bar: progress, play/pause, replay, speed, status ("Animations" opens the sheet on phones)
     Icon.jsx                  small SVG icons
 ```
 

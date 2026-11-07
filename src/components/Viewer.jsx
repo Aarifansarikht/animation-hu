@@ -14,9 +14,13 @@ function FitToFreeArea() {
     const mobile = window.matchMedia(MOBILE_QUERY).matches;
     const right = mobile ? 0 : 392; // side panel (360) + margins
     const top = mobile ? 64 : 84; // top bar
-    const bottom = mobile ? size.height * 0.44 + 110 : 112; // (bottom sheet +) player bar
+    const bottom = mobile ? 150 : 112; // player bar (two rows on phones)
     camera.setViewOffset(size.width, size.height, right / 2, (bottom - top) / 2, size.width, size.height);
-    camera.zoom = mobile ? Math.min(1, (size.height - top - bottom) / (size.height * 0.8)) : 1;
+    // phones: zoom in as far as fits — the character fills ~85% of the free height,
+    // while ~2.5 m stays visible across the narrow width (arms out, dance steps)
+    const fitHeight = (size.height - top - bottom) / (size.height * 0.66);
+    const fitWidth = (1.3 * size.width) / size.height;
+    camera.zoom = mobile ? Math.min(fitHeight, fitWidth) : 1;
     camera.updateProjectionMatrix();
     return () => {
       camera.clearViewOffset();

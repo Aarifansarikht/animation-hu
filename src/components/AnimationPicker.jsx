@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { CATEGORIES } from '../animations';
 import Icon from './Icon';
 
-/** Glass side panel listing every animation, with search and category filters. */
-export default function AnimationPicker({ animations, selectedId, onSelect }) {
+/**
+ * Glass panel listing every animation, with search and category filters.
+ * Side panel on desktop; on phones a bottom sheet that shows when `open` is true.
+ */
+export default function AnimationPicker({ animations, selectedId, onSelect, open, onClose }) {
   const [category, setCategory] = useState('all');
   const [query, setQuery] = useState('');
 
@@ -17,10 +20,14 @@ export default function AnimationPicker({ animations, selectedId, onSelect }) {
   const tabs = [{ id: 'all', label: 'All' }, ...CATEGORIES.filter((c) => animations.some((a) => a.category === c.id))];
 
   return (
-    <aside className="picker glass">
+    <aside className={`picker glass${open ? ' open' : ''}`}>
+      <div className="sheet-handle" />
       <header className="picker-header">
         <h2>Animations</h2>
         <span className="count">{animations.length}</span>
+        <button className="icon-btn sheet-close" onClick={onClose} title="Close">
+          <Icon name="close" size={16} />
+        </button>
       </header>
 
       <label className="search">

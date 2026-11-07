@@ -7,7 +7,7 @@ const SPEEDS = [0.5, 1, 1.5, 2];
  * Floating bar over the 3D view: current animation, progress, play/pause, replay and speed.
  * `status` reports file animations: { loading: true } while loading, { error } if it failed.
  */
-export default function NowPlaying({ animation, status, paused, speed, progressRef, onTogglePause, onReplay, onSpeed }) {
+export default function NowPlaying({ animation, status, paused, speed, progressRef, onTogglePause, onReplay, onSpeed, onOpenList }) {
   const category = CATEGORIES.find((c) => c.id === animation.category);
   const meta = status?.error ? (
     <span className="np-error">{status.error}</span>
@@ -32,6 +32,12 @@ export default function NowPlaying({ animation, status, paused, speed, progressR
           <div ref={progressRef} className="progress-fill" />
         </div>
       </div>
+
+      {/* phones only: opens the animation list (bottom sheet) */}
+      <button className="list-btn" onClick={onOpenList}>
+        <Icon name="list" size={16} />
+        Animations
+      </button>
 
       <div className="np-controls">
         <button className="icon-btn" onClick={onReplay} title="Replay">

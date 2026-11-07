@@ -305,7 +305,10 @@ code {
 .np-error { color: var(--action); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ---------- small screens: panel becomes a bottom sheet ---------- */
+/* bottom-sheet parts, only used on small screens */
+.sheet-backdrop, .sheet-handle, .sheet-close, .list-btn { display: none; }
+
+/* ---------- small screens: the animation list becomes a bottom sheet modal ---------- */
 @media (max-width: 860px) {
   :root { --edge: 12px; }
   .topbar { right: var(--edge); max-width: none; flex-wrap: nowrap; }
@@ -315,19 +318,46 @@ code {
   .ms-options { flex: 1; min-width: 0; }
   .ms-btn { flex: 1; justify-content: center; padding: 8px 10px; }
 
-  .picker { --r: 24px; top: auto; left: var(--edge); width: auto; height: 44vh; }
-  .picker-header { padding: 16px 18px 10px; }
-  .picker-hint { display: none; }
-
+  /* player bar: title + progress + "Animations" on top, playback buttons below */
   .now-playing {
     left: var(--edge); right: var(--edge); transform: none; width: auto;
-    bottom: calc(44vh + var(--edge) * 2); gap: 10px; padding: 10px;
+    flex-wrap: wrap; gap: 12px; padding: 12px;
   }
   .now-playing > .card-icon, .np-meta { display: none; }
   .np-title { margin-bottom: 8px; }
-  .speeds button { padding: 5px 6px; }
+  .np-controls { flex-basis: 100%; }
+  .speeds { margin-left: auto; }
+  .list-btn {
+    flex: none; display: flex; align-items: center; gap: 7px; height: 40px; padding: 0 14px;
+    border-radius: 999px; font-weight: 600; color: var(--ink);
+    background: var(--fill); border: 1px solid var(--stroke);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  .speeds button { padding: 5px 7px; }
+
+  /* the sheet: hidden below the screen until opened */
+  .picker {
+    --r: 28px 28px 0 0; z-index: 20;
+    top: auto; left: 0; right: 0; bottom: 0; width: auto; height: min(72vh, 640px);
+    padding-bottom: env(safe-area-inset-bottom);
+    background-color: rgba(8, 24, 60, 0.75); /* more solid, so the list stays readable */
+    transform: translateY(105%); visibility: hidden;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.35s;
+  }
+  .picker.open { transform: none; visibility: visible; transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .sheet-handle { display: block; width: 42px; height: 5px; margin: 10px auto 0; border-radius: 3px; background: rgba(200, 225, 255, 0.35); }
+  .sheet-close { display: grid; width: 36px; height: 36px; margin-left: auto; }
+  .picker-header { padding: 8px 16px 10px 20px; }
+  .picker-hint { display: none; }
+
+  .sheet-backdrop {
+    display: block; position: fixed; inset: 0; z-index: 15;
+    background: rgba(2, 8, 20, 0.5); opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .blob { animation: none; }
+  .picker, .picker.open, .sheet-backdrop { transition: none; }
 }

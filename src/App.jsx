@@ -27,6 +27,7 @@ export default function App() {
   const [paused, setPaused] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [fileStatus, setFileStatus] = useState(null); // { loading } | { error } | null
+  const [listOpen, setListOpen] = useState(false); // phones: animation list bottom sheet
   const progressRef = useRef(null);
 
   const model = findModel(modelId);
@@ -101,9 +102,20 @@ export default function App() {
         onTogglePause={() => setPaused((p) => !p)}
         onReplay={() => play(selectedId)}
         onSpeed={setSpeed}
+        onOpenList={() => setListOpen(true)}
       />
 
-      <AnimationPicker animations={animations} selectedId={selectedId} onSelect={play} />
+      <div className={`sheet-backdrop${listOpen ? ' open' : ''}`} onClick={() => setListOpen(false)} />
+      <AnimationPicker
+        animations={animations}
+        selectedId={selectedId}
+        onSelect={(id) => {
+          play(id);
+          setListOpen(false); // close the sheet so the character is visible again
+        }}
+        open={listOpen}
+        onClose={() => setListOpen(false)}
+      />
     </div>
   );
 }
